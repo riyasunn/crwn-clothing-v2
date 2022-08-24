@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 
 import './sign-in-form.styles.scss';
 
@@ -6,7 +6,7 @@ import FormInput from "../form-input/form-input.component";
 
 import Button from "../button/button.component";
 
-import {UserContext} from '../../context/user.context';
+// import {UserContext} from '../../context/user.context';
 
 import { createUserDocumentFromAuth, signInWithGooglePopup, signInAuthUserWithEmailAndPassword } from '../../utils/firebase/firebase.utils'
 
@@ -23,16 +23,16 @@ const SignInForm = () => {
   const { email, password } = formFields;   //delete displayname & confirmed password
   // console.log(formFields);
 
-  const { setCurrentUser } = useContext(UserContext);
+  // const { setCurrentUser } = useContext(UserContext);
 
   const resetFormFields = () => {
     setFormFields (defaultFormFields);
   }
 
   const signInWithGoogle = async () => {
-    const { user} = await signInWithGooglePopup();
+    await signInWithGooglePopup();
     // console.log("signIn", response);
-    await createUserDocumentFromAuth(user);
+    // await createUserDocumentFromAuth(user);   move to user.context file
   };
 
   const handleSubmit = async (event) => {
@@ -44,11 +44,11 @@ const SignInForm = () => {
 
     try{
 
-     const {user} = await signInAuthUserWithEmailAndPassword (email, password);
+      await signInAuthUserWithEmailAndPassword (email, password);
 
     //  console.log(response);
 
-    setCurrentUser(user); //run setCurrentUser when the await user come back; deleted becuz setuser in usercontext file
+    // setCurrentUser(user); //run setCurrentUser when the await user come back; deleted becuz setuser in usercontext file
       resetFormFields();
 
     }catch(error) {
