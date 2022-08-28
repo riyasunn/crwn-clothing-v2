@@ -15,6 +15,10 @@ import {
     doc,
     getDoc,
     setDoc,
+    collection,
+    writeBatch,
+    query,
+    getDocs,
  } from "firebase/firestore"
 
 const firebaseConfig = {
@@ -39,6 +43,57 @@ export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider)
 export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
 
 export const db = getFirestore();
+
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+    const collectionRef = collection(db, collectionKey);
+    const batch = writeBatch(db);
+
+    objectsToAdd.forEach((object) => {
+        const docRef = doc(collectionRef, object.title.toLowerCase());
+        batch.set(docRef, object);
+    });
+
+    await batch.commit();
+    console.log('done');
+};
+
+export const getCategoriesAndDocuments = async () => {
+    const collectionRef = collection(db, 'categories');
+    const q = query(collectionRef);
+
+    const querySnapshot = await getDocs(q);
+    const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+        const { title, items } = docSnapshot.data();
+        console.log(title, items);
+        acc[title.toLowerCase()] = items;
+        console.log(acc);
+        return acc;
+    },{})
+
+    return categoryMap;
+}
+/*原来的数据是这样的格式：
+ [
+  {
+    title: 'Hats',
+    items: [
+      {
+        id: 1,
+        name: 'Brown Brim',
+        imageUrl: 'https://i.ibb.co/ZYW3VTp/brown-brim.png',
+        price: 25,
+      },
+    }，
+
+想变为以下格式：
+[
+    {
+        'Hats':[ 里面是items的内容如id:1]
+    },
+]
+
+也就是说将[{key1:val1,key2:val2},{}...] => [{val1:val2},{}...]
+*/
 
 export const createUserDocumentFromAuth = async (userAuth, additionInformation = {}) => {
     if(!userAuth) return;
