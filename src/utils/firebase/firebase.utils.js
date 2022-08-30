@@ -57,6 +57,7 @@ export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => 
     console.log('done');
 };
 
+
 export const getCategoriesAndDocuments = async () => {
     const collectionRef = collection(db, 'categories');
     const q = query(collectionRef);
@@ -64,9 +65,9 @@ export const getCategoriesAndDocuments = async () => {
     const querySnapshot = await getDocs(q);
     const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
         const { title, items } = docSnapshot.data();
-        console.log(title, items);
+        // console.log(title, items);
         acc[title.toLowerCase()] = items;
-        console.log(acc);
+        // console.log(acc);
         return acc;
     },{})
 
