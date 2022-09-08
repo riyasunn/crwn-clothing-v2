@@ -63,15 +63,17 @@ export const getCategoriesAndDocuments = async () => {
     const q = query(collectionRef);
 
     const querySnapshot = await getDocs(q);
-    const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-        const { title, items } = docSnapshot.data();
-        // console.log(title, items);
-        acc[title.toLowerCase()] = items;
-        // console.log(acc);
-        return acc;
-    },{})
+    return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
 
-    return categoryMap;
+    // const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    //     const { title, items } = docSnapshot.data();
+    //     // console.log(title, items);
+    //     acc[title.toLowerCase()] = items;
+    //     // console.log(acc);
+    //     return acc;
+    // },{})
+
+    // return categoryMap;
 }
 /*原来的数据是这样的格式：
  [
