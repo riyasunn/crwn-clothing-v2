@@ -3,13 +3,16 @@ import { useParams } from 'react-router-dom';
 import { CategoriesContext } from '../../context/categories.context';
 import ProductCard from '../../components/product-card/product-card.component';
 import { useSelector } from 'react-redux';
-import { selectCategoriesMap } from '../../store/categories/category.selector';
-import "./category.styles.scss";
+import { selectCategoriesMap, selectCategoriesIsLoading } from '../../store/categories/category.selector';
+import Spinner from '../../components/spinner/spinner.component';
+import { Title, CategoryContainer } from './category.styles';
+import { isLabelWithInternallyDisabledControl } from '@testing-library/user-event/dist/utils';
 
 
 const Category = () => {
     const { category } = useParams();
     const categoriesMap = useSelector(selectCategoriesMap);
+    const isLoading = useSelector(selectCategoriesIsLoading);
 
     // const { categoriesMap } = useContext(CategoriesContext);
     // const products = categoriesMap[category];
@@ -21,13 +24,17 @@ const Category = () => {
 
     return (
         <Fragment>
-            <h2 className='category-title'>{category.toUpperCase()}</h2>
-            <div className='category-container'>
-                {products &&
-                products.map((product) => (<ProductCard key={product.id} product={product}/> ))  
-                }
+            <Title>{category.toUpperCase()}</Title>
+            {isLoading ? (
+                <Spinner />
+            ) : (
+                <CategoryContainer>
+                    {products &&
+                    products.map((product) => (<ProductCard key={product.id} product={product}/> ))  
+                    }
+                </CategoryContainer>
+            )}
             
-            </div>
         </Fragment>
     )
 }
