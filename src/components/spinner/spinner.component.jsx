@@ -1,10 +1,9 @@
 import { SpinnerOverlay, SpinnerContainer } from './spinner.styles';
 
-const Spinner = () => {
+const Spinner = () => (
     <SpinnerOverlay>
         <SpinnerContainer />
     </SpinnerOverlay>
     // console.log('fire spinner');
-};
-
+    ); //JSX
 export default Spinner;

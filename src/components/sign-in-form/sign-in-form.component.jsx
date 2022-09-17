@@ -10,6 +10,9 @@ import Button, { BUTTON_TYPE_CLASSES }from "../button/button.component";
 
 import { createUserDocumentFromAuth, signInWithGooglePopup, signInAuthUserWithEmailAndPassword } from '../../utils/firebase/firebase.utils'
 
+import { useDispatch } from "react-redux";
+import {googleSignInStart, emailSignInStart} from '../../store/user/user.action';
+
 const defaultFormFields = {
   email: "",
   password: "",      //delete displayname & confirmed password
@@ -19,6 +22,7 @@ const defaultFormFields = {
 // defaultFormFields.displayName = value;
 
 const SignInForm = () => {
+  const dispatch = useDispatch();
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;   //delete displayname & confirmed password
   // console.log(formFields);
@@ -30,7 +34,8 @@ const SignInForm = () => {
   }
 
   const signInWithGoogle = async () => {
-    await signInWithGooglePopup();
+    dispatch(googleSignInStart);
+    // await signInWithGooglePopup();
     // console.log("signIn", response);
     // await createUserDocumentFromAuth(user);   move to user.context file
   };
@@ -43,8 +48,8 @@ const SignInForm = () => {
     // }
 
     try{
-
-      await signInAuthUserWithEmailAndPassword (email, password);
+      dispatch(emailSignInStart(email, password));
+      // await signInAuthUserWithEmailAndPassword (email, password);
 
     //  console.log(response);
 
@@ -52,15 +57,16 @@ const SignInForm = () => {
       resetFormFields();
 
     }catch(error) {
-     switch (error.code) {
-      case 'auth/wrong-password':
-        alert('incorrect password for email');
-        break;
-      case 'auth/user-not-found':
-        alert('no user associated with this email');
-        break;
-      default:
-        console.log(error);
+      console.log('user sign in failed', error);
+    //  switch (error.code) {
+    //   case 'auth/wrong-password':
+    //     alert('incorrect password for email');
+    //     break;
+    //   case 'auth/user-not-found':
+    //     alert('no user associated with this email');
+    //     break;
+    //   default:
+    //     console.log(error);
      }
       // if (error.code === "auth/wrong-password") {
       //   alert("incorrect password for email");
@@ -68,7 +74,7 @@ const SignInForm = () => {
       //   alert("no user associated with this email")
       // }
      
-    }
+    
 
   };
 
