@@ -1,17 +1,34 @@
-import { cardElement } from '@stripe/react-stripe-js';
+import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 import Button, { BUTTON_TYPE_CLASSES }from '../button/button.component';
 
+import { PaymentFormContainer, FormContainer } from './payment-form.styles';
+
 
 const PaymentForm = () => {
-    return (
-        <div>
-            <h1>Credit card: </h1>
-            <cardElement />
+    const stripe = useStripe();
+    const elements = useElements();
 
-            <Button type={BUTTON_TYPE_CLASSES.inverted}>Pay now</Button>
-        
-        </div>
+    const paymentHandler = async (e) => {
+        e.preventDefault();
+        if(!stripe || !elements) {
+            return;
+        }
+
+        const response = await fetch('/.netlify/functions/create-payment-intent', {
+            
+        })
+
+    }
+    return (
+        <PaymentFormContainer>
+            <FormContainer>
+                <h1>Credit card payment: </h1>
+                <CardElement />
+
+                <Button buttonType={BUTTON_TYPE_CLASSES.inverted}>Pay now</Button>
+            </FormContainer>
+        </PaymentFormContainer>
     )
 };
 
